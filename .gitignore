@@ -104,4 +104,4 @@ venv.bak/
 .mypy_cache/
 
 # custom log files
-logs/
+#logs/
