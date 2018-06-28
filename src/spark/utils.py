@@ -11,7 +11,7 @@ db_config={
 
 
 def get_url(argv, s3_bucket_name="venmo-json"):
-    '''provides url for data based on argv'''
+    '''utility function to generate location for data in s3 bucket based on arguments provided'''
 
     if len(argv) == 2:
         year = argv[1]
