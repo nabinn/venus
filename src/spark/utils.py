@@ -3,10 +3,10 @@ from __future__ import print_function
 import mysql.connector
 
 db_config={
-	'host':'10.0.0.14',
-	'user':'nabin',
-	'password':'123',
-	'database':'venmo_db'
+	'host':'host_ip',
+	'user':'db_user_name',
+	'password':'db_password',
+	'database':'db_name'
 }
 
 
