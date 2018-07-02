@@ -9,11 +9,14 @@ Following 4 metrics are calculated every day:
  2. Number of times a user receives money
  3. Numer of times a pair of uesrs take part in a transaction
  4. The amount a user spends per day (i.e. amount sent - amount received)
-
-
+--  
 # Data Pipeline
 ![](/img/pipeline.png)
 
+The data is present in s3 bucket. Spark reads the data and calculates the aggregated result. The result is then saved to MySQL database. The user can then query the database via a frontedn that is implemented using Flask. 
+
+The entire is automated using Airflow such that whenever there is new data in the bucket, spark jobs are started and the results are saved to the database. Airflow also allows for monitoring the whole workflow and notify the user if any of the jobs fail.
+
 # Links
 - [Demo](http://venus-demo.com/)
-- [PPt](https://docs.google.com/presentation/d/1FUp8HuKw7pjzcJy6l3H62fRjBZxd6bQRZB_IEADHrpY/edit?usp=sharing)
+- [PPT](https://docs.google.com/presentation/d/1FUp8HuKw7pjzcJy6l3H62fRjBZxd6bQRZB_IEADHrpY/edit?usp=sharing)
