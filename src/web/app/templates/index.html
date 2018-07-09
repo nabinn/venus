@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container">
+<div class="starter-template">
+
+  <form action="/result", method = "POST">
+
+      <div class="form-group">
+          <label>Select a Metric:</label>
+          <select name="analytics">
+            <option value="active_senders">Most Active Senders</option>
+            <option value="active_receivers">Most Active Receivers</option>
+            <option value="active_pairs">Most Active Pairs</option>
+            <option value="active_spenders">Active Spenders</option>
+          </select>
+      </div>
+
+      <div class="form-group">
+          <label>Select Number:</label>
+          <select name="num">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+      </div>
+
+      <div class="form-group">
+            <label class="control-label">Select a date:</label>
+            <input type="date" onkeydown="return false" min="2017-01-01" max="2017-01-20" name="day">
+      </div>
+
+       <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+  </form>
+
+</div>
+</div>
+<!-- /.container -->
+{% endblock %}

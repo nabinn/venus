@@ -1,0 +1,20 @@
+
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: left;
+}
+
+.form .control-label{
+    /* text-align:right; */
+    text-align:left;
+    background-color:#ffa;
+}
+
+.table {
+        max-width: none;
+        table-layout: fixed;
+        word-wrap: break-word;
+    }

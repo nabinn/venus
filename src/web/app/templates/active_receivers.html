@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="container">
+      <div class="starter-template">
+
+        {% if data %}
+        <h1>{{title}}</h1>
+        <table class="table">
+        <tbody>
+       {% for user in data %}
+
+
+       <tr>
+         <td>
+           <img src={{user.image}}
+           onerror="this.src='https://s3.amazonaws.com/venmo/no-image.gif'"
+           style="width: 50px; height=50px;border-radius: 50%;">
+          <br>
+         {{user.name}}
+       </td>
+         <td><br>{{user.recv_freq}} Transactions</td>
+
+       </tr>
+           {% endfor %}
+     </tbody>
+     </table>
+        {% else %}
+        <h1>Not found!</h1>
+        {% endif %}
+
+    </div>
+    </div><!-- /.container -->
+{% endblock %}

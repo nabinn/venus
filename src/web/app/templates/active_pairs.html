@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+      <div class="starter-template">
+
+        {% if data %}
+        <h1>{{title}}</h1>
+        <table class="table">
+            <tbody>
+               {% for pair in data %}
+               <tr>
+                 <td>
+                   <img src={{pair.user1_img}}
+                   onerror="this.src='https://s3.amazonaws.com/venmo/no-image.gif'"
+                   style="width: 50px; height=50px;border-radius: 50%;">
+                   <br>
+                 {{pair.user1}}
+                 </td>
+
+
+                 <td>
+                   <img src={{pair.user2_img}}
+                   onerror="this.src='https://s3.amazonaws.com/venmo/no-image.gif'"
+                   style="width: 50px; height=50px;border-radius: 50%;">
+                   <br>
+                 {{pair.user2}}
+                 </td>
+
+                 <td><br>{{pair.transaction_freq}} Transactions</td>
+
+               </tr>
+               {% endfor %}
+             </tbody>
+     </table>
+     {% else %}
+        <h1>Not found!</h1>
+      {% endif %}
+
+    </div>
+    </div>
+    <!-- /.container -->
+{% endblock %}
