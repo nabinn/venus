@@ -1,15 +1,18 @@
-"""Extract user information from transactions and saves to mysql database
-using dataframe.save('jdbc')
+"""
+Script to extract user information from transactions and save to mysql database
+using Spark Dataframe's write api. This approach is faster compared to writing collected
+rdd using mysql connector.
 """
 
-from __future__ import print_function
 from pyspark.sql import SparkSession
-from utils import get_url
+from utils import get_url, db_config
+from utils import sql_create_table, sql_run_custom_query
 import json
 import sys
 import time
 import logging
-logging.basicConfig(filename='/home/ubuntu/venmo/logs/userinfo_df_save.log',
+from utils import get_logfile_name
+logging.basicConfig(filename=get_logfile_name(__file__),
                     level=logging.INFO,
                     format='%(asctime)s %(message)s')
 
@@ -41,17 +44,27 @@ def parse_user_info(json_record):
             return [None, None]
 
 
+create_users_table_stmt = """CREATE TABLE IF NOT EXISTS users(
+                                id INT PRIMARY KEY,
+                                username VARCHAR(50) NOT NULL,
+                                firstname VARCHAR(100),
+                                lastname VARCHAR(100),
+                                picture TEXT
+                                );
+					"""
+
+
 if __name__=="__main__":
 
-    spark = SparkSession.builder.appName('venmoApp-userinfo-mysql').getOrCreate()
+    spark = SparkSession.builder.appName('venmoApp-userinfo-df').getOrCreate()
     sc = spark.sparkContext
     #sc = SparkContext(appName="venmoApp-userinfo-mysql")
 
     data_location = get_url(sys.argv)
 
     if data_location is None:
-        print("not a valid data location.\nExiting the program")
-        sys.exit(0)
+        logging.error("not a valid data location.\nExiting the program")
+        sys.exit(1)
 
     logging.info("Processing:"+ data_location+" using dataframe and write")
 
@@ -66,12 +79,26 @@ if __name__=="__main__":
 
     distinct_users_df=users_df.dropDuplicates(["id"])
     distinct_users_df.write.format('jdbc').options(
-          url='jdbc:mysql://10.0.0.14/venmo_db',
+          url='jdbc:mysql://'+db_config["host"]+"/"+db_config["database"],
           driver='com.mysql.jdbc.Driver',
           dbtable='users_temp',
-          user='nabin',
-          password='123').mode('append').save()
+          user=db_config["user"],
+          password=db_config["password"]).mode("overwrite").save() #mode("append")
     end_time=time.time()
 
     logging.info("Processed "+str(distinct_users_df.count())+" users in "+
+         str(end_time-start_time)+ " seconds\n")
+
+    #after writing dataframe to temp table perform
+    # upsert operation on users table.
+    start_time=time.time()
+    # create table if not exists
+    #sql_create_table(create_users_table_stmt)
+    # copy data from users_temp to users by removing dropDuplicates
+    sql_run_custom_query("""INSERT IGNORE INTO users
+                         SELECT id, username, firstname, lastname, picture
+                         FROM users_temp;
+                         """)
+    end_time=time.time()
+    logging.info("Upsert into database took "+
          str(end_time-start_time)+ " seconds\n")

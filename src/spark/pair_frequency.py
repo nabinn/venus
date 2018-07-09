@@ -1,4 +1,9 @@
-from __future__ import print_function
+'''
+This script counts the number of times a pair of users interact
+with each other per day, i.e., increment the value for the key (A, B, Date) every time A sends
+money to B or vice versa. Result is save to pair_activity table.
+'''
+
 from pyspark import SparkContext
 from utils import get_url
 from utils import sql_create_table, sql_insert_rdd_to_table
@@ -8,10 +13,10 @@ import datetime
 import time
 from dateutil import parser
 import logging
-logging.basicConfig(filename='/home/ubuntu/venmo/logs/pair_frequency.log',
+from utils import get_logfile_name
+logging.basicConfig(filename=get_logfile_name(__file__),
                     level=logging.INFO,
                     format='%(asctime)s %(message)s')
-
 
 def parse_pairs(json_record):
     try:
@@ -42,7 +47,7 @@ create_table_pair_activity = """CREATE TABLE IF NOT EXISTS pair_activity(
                                 );
 					"""
 
-add_pair_activity="""INSERT INTO pair_activity(user1, user2, transaction_date, transaction_freq) VALUES (%s,%s,%s,%s);"""
+add_pair_activity="""INSERT IGNORE INTO pair_activity(user1, user2, transaction_date, transaction_freq) VALUES (%s,%s,%s,%s);"""
 
 
 
@@ -53,8 +58,8 @@ if __name__=="__main__":
     data_location = get_url(sys.argv) # get url of data based on command line args
 
     if data_location is None:
-        print("not a valid data location.\nExiting the program")
-        sys.exit(0)
+        logging.error("not a valid data location.\nExiting the program")
+        sys.exit(1)
 
     logging.info("Processing: "+data_location)
     data_rdd = sc.textFile(data_location)
@@ -78,9 +83,9 @@ if __name__=="__main__":
             logging.info("Processed "+str(user_pairs.count())+" pair of users in "+
                 str(end_time-start_time)+ " seconds\n")
         else:
-            print("Error while inserting to table")
+            logging.error("Error while inserting to table")
             sys.exit(1)
 
     else:
-        print("Error in table creation")
+        logging.error("Error in table creation")
         sys.exit(1)

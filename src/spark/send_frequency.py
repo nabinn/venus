@@ -1,6 +1,7 @@
-"""Script to aggregate and save data on how many times does a user sends money on a daily basis"""
-
-from __future__ import print_function
+"""
+Script to aggregate result on the number of times a user sends money per day.
+The aggregated result is saved to the sender_activity table.
+"""
 from pyspark import SparkContext
 from utils import get_url
 from utils import sql_create_table, sql_insert_rdd_to_table
@@ -10,7 +11,8 @@ import datetime
 import time
 from dateutil import parser
 import logging
-logging.basicConfig(filename='/home/ubuntu/venmo/logs/send_frequency.log',
+from utils import get_logfile_name
+logging.basicConfig(filename=get_logfile_name(__file__),
                     level=logging.INFO,
                     format='%(asctime)s %(message)s')
 
@@ -46,8 +48,8 @@ if __name__ == '__main__':
     data_location = get_url(sys.argv)
 
     if data_location is None:
-        print("not a valid data location.\nExiting the program")
-        sys.exit(0)
+        logging.error("not a valid data location.\nExiting the program")
+        sys.exit(1)
 
     logging.info("Processing: "+data_location)
 
@@ -74,9 +76,9 @@ if __name__ == '__main__':
             logging.info("Processed "+str(parsed_senders.count())+" users in "+
                 str(end_time-start_time)+ " seconds\n")
         else:
-            print("Error while inserting")
+            logging.error("Error while inserting to the table")
             sys.exit(0)
 
     else:
-        print("Error in table creation")
+        logging.error("Error in table creation")
         sys.exit(0)

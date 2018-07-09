@@ -1,4 +1,8 @@
-from __future__ import print_function
+"""
+Script to extract user information such as user id, firstname, lastname,
+image_url, etc. from transactions and save the result to users table.
+Info for both sender and receiver is captured from each transaction.
+"""
 from pyspark import SparkContext
 from utils import get_url
 from utils import sql_create_table, sql_insert_rdd_to_table
@@ -6,11 +10,10 @@ import json
 import sys
 import time
 import logging
-
-logging.basicConfig(filename='/home/ubuntu/venmo/logs/userinfo.log',
+from utils import get_logfile_name
+logging.basicConfig(filename=get_logfile_name(__file__),
                     level=logging.INFO,
                     format='%(asctime)s %(message)s')
-
 
 
 def parse_user_info(json_record):
@@ -60,7 +63,7 @@ if __name__=="__main__":
     data_location = get_url(sys.argv)
 
     if data_location is None:
-        print("not a valid data location.\nExiting the program")
+        logging.error("not a valid data location.\nExiting the program")
         sys.exit(0)
     logging.info("Processing:"+ data_location)
 
@@ -83,9 +86,9 @@ if __name__=="__main__":
             logging.info("Processed "+str(parsed_users.count())+" users in "+
                 str(end_time-start_time)+ " seconds\n")
         else:
-            print("Error while inserting to table")
+            logging.error("Error while inserting to table")
             sys.exit(1)
 
     else:
-        print("Error in table creation")
+        logging.error("Error in table creation")
         sys.exit(1)
