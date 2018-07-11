@@ -17,7 +17,7 @@ def get_logfile_name(file_name, logdir=PROJECT_DIR+"logs/"):
         return logdir+log_fname
 
 def get_url(argv, mode="date"):
-    '''Provides url for data based on argv and modeself.
+    '''Provides url for data based on argv and mode.
 
 	   mode: file or date or temp
 	   		date mode: expects date in [year month day] format as argv
