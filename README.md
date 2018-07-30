@@ -15,7 +15,7 @@ Following 4 metrics are calculated every day:
 
 The data is present in s3 bucket. Spark reads the data and calculates the aggregated result. The result is then saved to MySQL database. The user can then query the database via a frontend that is implemented using Flask. 
 
-The entire is automated using Airflow such that whenever there is new data in the bucket, spark jobs are triggered and the results are saved to the database. Airflow also allows for the monitoring of the whole workflow and notify the user in case of failure.
+The entire process is automated using Airflow such that whenever there is new data in the bucket, spark jobs are triggered and the results are saved to the database. The application also allows for the monitoring of the workflow and notify the user in case of failure.
 
 # Links
 - [Demo](http://venus-demo.com/)
