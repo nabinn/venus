@@ -9,7 +9,7 @@ Following 4 metrics are calculated every day:
  2. Number of times a user receives money
  3. Numer of times a pair of uesrs take part in a transaction
  4. The amount a user spends per day (i.e. amount sent - amount received)
---  
+  
 # Data Pipeline
 ![](/img/pipeline.png)
 
