@@ -2,7 +2,7 @@
 An automatic data processing pipeline for venmo transactions.
 
 # Project Description
-The aim of the project is to rank Venmo users on a daily basis based on their activity .i.e. how often do they send or receive money and how much do they spend. 
+The aim of the project is to rank Venmo users on a daily basis based on their activity .i.e. frequency of transaction and amount spent. 
 
 Following 4 metrics are calculated every day:
  1. Number of times a user sends money
@@ -18,5 +18,5 @@ The data is present in s3 bucket. Spark reads the data and calculates the aggreg
 The entire process is automated using Airflow such that whenever there is new data in the bucket, spark jobs are triggered and the results are saved to the database. The application also allows for the monitoring of the workflow and notify the user in case of failure.
 
 # Links
-- [Demo](http://venus-demo.com/)
+- [Demo](https://www.youtube.com/watch?v=FDVOBDm1lcw)
 - [PPT](https://docs.google.com/presentation/d/1FUp8HuKw7pjzcJy6l3H62fRjBZxd6bQRZB_IEADHrpY/edit?usp=sharing)
